@@ -27,17 +27,19 @@ If there is not enough room around a MacBook notch, close an app with a long men
 
 Only built-in system APIs are used. No administrator privileges, telemetry, account, remote API or persistent measurement logs. Preferences are stored locally. GPU, temperature, fan control and per-process monitoring are outside version 1.0.
 
-Memory is estimated as active + inactive + wired + compressed pages, minus purgeable and external/file-backed pages, clamped to physical RAM. It is not memory pressure; it may differ slightly from Activity Monitor. CPU is normalized across all logical cores, from 0–100%. Units use decimal GB/MB/KB.
+Memory is estimated as active + inactive + wired + compressed pages, minus purgeable and external/file-backed pages, clamped to physical RAM. It is not memory pressure; it may differ slightly from Activity Monitor. CPU is normalized across all logical cores, from 0–100%. Memory uses the macOS convention of binary gigabytes labeled GB; storage and network use decimal GB/MB/KB.
 
 ## Build
 
 Install Xcode Command Line Tools (`xcode-select --install`) with Swift 5.9 or newer.
 
 ```sh
-swift test
+bash scripts/check.sh
 bash scripts/build-app.sh
 open dist/MacPulse.app
 ```
+
+The standalone checks work with Command Line Tools alone. The XCTest suite runs with full Xcode using `swift test --build-system native`, including in GitHub Actions.
 
 For a universal release:
 
