@@ -1,0 +1,27 @@
+name: macOS checks
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test-and-build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test telemetry
+        run: swift test --build-system native
+      - name: Build universal app
+        run: bash scripts/package-release.sh
+      - name: Verify package
+        run: |
+          codesign --verify --strict dist/MacPulse.app
+          lipo -archs dist/MacPulse.app/Contents/MacOS/MacPulse
+          dist/MacPulse.app/Contents/MacOS/MacPulse --diagnose
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MacPulse-universal
+          path: |
+            dist/MacPulse-*-universal.zip
+            dist/SHA256SUMS.txt
